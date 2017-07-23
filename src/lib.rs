@@ -149,8 +149,8 @@ impl DerefMut for Termios {
 #[derive(Clone, Copy, Debug, Default)]
 #[repr(C)]
 pub struct Winsize {
-    ws_row: u16,
-    ws_col: u16
+    pub ws_row: u16,
+    pub ws_col: u16
 }
 
 impl Deref for Winsize {
