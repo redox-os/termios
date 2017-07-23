@@ -145,3 +145,27 @@ impl DerefMut for Termios {
         }
     }
 }
+
+#[derive(Clone, Copy, Debug, Default)]
+#[repr(C)]
+pub struct Winsize {
+    ws_row: u16,
+    ws_col: u16
+}
+
+impl Deref for Winsize {
+    type Target = [u8];
+    fn deref(&self) -> &[u8] {
+        unsafe {
+            slice::from_raw_parts(self as *const Winsize as *const u8, mem::size_of::<Winsize>()) as &[u8]
+        }
+    }
+}
+
+impl DerefMut for Winsize {
+    fn deref_mut(&mut self) -> &mut [u8] {
+        unsafe {
+            slice::from_raw_parts_mut(self as *mut Winsize as *mut u8, mem::size_of::<Winsize>()) as &mut [u8]
+        }
+    }
+}
