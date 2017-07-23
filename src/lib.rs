@@ -3,6 +3,9 @@
 
 extern crate syscall;
 
+use core::{mem, slice};
+use core::ops::{Deref, DerefMut};
+
 pub type tcflag_t = u32;
 pub type cc_t = u8;
 
@@ -124,4 +127,21 @@ pub struct Termios {
     pub c_cflag: tcflag_t,
     pub c_lflag: tcflag_t,
     pub c_cc: [cc_t; 32]
+}
+
+impl Deref for Termios {
+    type Target = [u8];
+    fn deref(&self) -> &[u8] {
+        unsafe {
+            slice::from_raw_parts(self as *const Termios as *const u8, mem::size_of::<Termios>()) as &[u8]
+        }
+    }
+}
+
+impl DerefMut for Termios {
+    fn deref_mut(&mut self) -> &mut [u8] {
+        unsafe {
+            slice::from_raw_parts_mut(self as *mut Termios as *mut u8, mem::size_of::<Termios>()) as &mut [u8]
+        }
+    }
 }
