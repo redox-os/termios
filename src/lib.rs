@@ -119,7 +119,7 @@ pub const TOSTOP: tcflag_t = 0x00400000;
 pub const IEXTEN: tcflag_t = 0x00000400;
 /* } c_lflag */
 
-#[derive(Clone, Copy, Debug, Default)]
+#[derive(Clone, Copy, Debug)]
 #[repr(C)]
 pub struct Termios {
     pub c_iflag: tcflag_t,
@@ -127,6 +127,53 @@ pub struct Termios {
     pub c_cflag: tcflag_t,
     pub c_lflag: tcflag_t,
     pub c_cc: [cc_t; 32]
+}
+
+impl Default for Termios {
+    fn default() -> Termios {
+        let mut termios = Termios {
+            c_iflag: ICRNL | IXON,
+            c_oflag: OPOST | ONLCR,
+            c_cflag: B38400 | CS8 | CREAD | HUPCL,
+            c_lflag: ISIG | ICANON | ECHO | ECHOE | ECHOK | IEXTEN,
+            c_cc: [0; 32]
+        };
+
+        {
+            let mut cc = |i: usize, b: cc_t| {
+                termios.c_cc[i] = b;
+            };
+
+            cc(VEOF, 0o004);    // CTRL-D
+            cc(VEOL, 0o000);    // NUL
+            cc(VEOL2, 0o000);   // NUL
+            cc(VERASE, 0o177);  // DEL
+            cc(VWERASE, 0o027); // CTRL-W
+            cc(VKILL, 0o025);   // CTRL-U
+            cc(VREPRINT, 0o022);// CTRL-R
+            cc(VINTR, 0o003);   // CTRL-C
+            cc(VQUIT, 0o034);   // CTRL-\
+            cc(VSUSP, 0o032);   // CTRL-Z
+            cc(VSTART, 0o021);  // CTRL-Q
+            cc(VSTOP, 0o023);   // CTRL-S
+            cc(VLNEXT, 0o026);  // CTRL-V
+            cc(VDISCARD, 0o017);// CTRL-U
+            cc(VMIN, 1);
+            cc(VTIME, 0);
+        }
+
+        termios
+    }
+}
+
+impl Termios {
+    pub fn make_raw(&mut self) {
+        self.c_iflag &= !(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);
+        self.c_oflag &= !OPOST;
+        self.c_cflag &= !(CSIZE | PARENB);
+        self.c_cflag |= CS8;
+        self.c_lflag &= !(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
+    }
 }
 
 impl Deref for Termios {
