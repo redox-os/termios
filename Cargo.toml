@@ -1,6 +1,6 @@
 [package]
 name = "redox_termios"
-version = "0.1.1"
+version = "0.1.2"
 description = "A Rust library to access Redox termios functions"
 license = "MIT"
 authors = ["Jeremy Soller <jackpot51@gmail.com>"]
@@ -12,4 +12,4 @@ name = "redox_termios"
 path = "src/lib.rs"
 
 [dependencies]
-redox_syscall = "0.1"
+redox_syscall = "0.2"
