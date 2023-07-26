@@ -12,4 +12,4 @@ name = "redox_termios"
 path = "src/lib.rs"
 
 [dependencies]
-redox_syscall = "0.2"
+redox_syscall = "0.3"
