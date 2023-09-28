@@ -6,10 +6,10 @@ license = "MIT"
 authors = ["Jeremy Soller <jackpot51@gmail.com>"]
 repository = "https://gitlab.redox-os.org/redox-os/termios"
 documentation = "https://docs.rs/redox_termios"
+edition = "2021"
 
 [lib]
 name = "redox_termios"
 path = "src/lib.rs"
 
 [dependencies]
-redox_syscall = "0.2"
